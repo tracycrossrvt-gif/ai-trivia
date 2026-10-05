@@ -50,23 +50,33 @@ export default function App() {
   return (
     <main className="app">
       <header>
-  <h1>AI Trivia</h1>
+  <h1>Vet Tech Trivia</h1>
   <span className="score">Score: {score}</span>
   <span className="bestScore">Best Score: {bestScore}</span>
 </header>
 
       <form onSubmit={askTopic} className="topic-form">
-        <input
-          value={topic}
-          onChange={(event) => setTopic(event.target.value)}
-          placeholder="Pick a topic — space, football, the 90s…"
-        />
-        <button disabled={loading}>{loading ? 'Thinking…' : 'New question'}</button>
-      </form>
+  <input
+    id="topic"
+    name="topic"
+    value={topic}
+    onChange={(event) => setTopic(event.target.value)}
+    placeholder="Pick a topic — anesthesia, parasites, cats..."
+  />
+  <button disabled={loading}>
+    {loading ? 'Thinking…' : 'New question'}
+  </button>
+</form>
 
       <PhotoRound onSubmit={askPhoto} loading={loading} />
 
       {error && <p className="error">{error}</p>}
+
+      {loading && (
+  <p className="loading-message">
+    Fetching your veterinary brain-buster…
+  </p>
+)}
       {question && (
         <QuestionCard
           data={question}
