@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { postJSON } from './api.js';
 import QuestionCard from './components/QuestionCard.jsx';
 import PhotoRound from './components/PhotoRound.jsx';
+import PracticeMode from './components/PracticeMode.jsx';
 
 export default function App() {
   const [topic, setTopic] = useState('');
@@ -85,6 +86,8 @@ export default function App() {
           bestScore={bestScore}
         />
       )}
+      <PracticeMode />
+      
     </main>
   );
 }
