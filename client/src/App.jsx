@@ -3,6 +3,7 @@ import { postJSON } from './api.js';
 import QuestionCard from './components/QuestionCard.jsx';
 import PhotoRound from './components/PhotoRound.jsx';
 import PracticeMode from './components/PracticeMode.jsx';
+import PracticeSession from './components/PracticeSession.jsx';
 
 export default function App() {
   const [topic, setTopic] = useState('');
@@ -87,6 +88,7 @@ export default function App() {
         />
       )}
       <PracticeMode />
+      <PracticeSession />
       
     </main>
   );

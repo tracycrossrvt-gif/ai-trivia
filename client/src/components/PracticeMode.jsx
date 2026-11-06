@@ -89,7 +89,7 @@ export default function PracticeMode() {
       <h2>VetBoard Practice Mode</h2>
       <p>Choose a VTNE domain to begin studying.</p>
 
-      <form onSubmit={loadQuestion} className="topic-form">
+      <form onSubmit={loadQuestion} className="topic-form practice-domain-form">
         <select
           aria-label="VTNE study domain"
           value={selectedDomain}
