@@ -92,18 +92,17 @@ select:focus-visible {
   line-height: 1.25;
 }
 
-.score,
-.bestScore {
-  flex: 0 1 auto;
-  min-width: 0;
-  padding: 6px 14px;
-  background: var(--card);
-  border: 1px solid var(--line);
-  border-radius: 999px;
+.subtitle {
+  flex: 1 1 100%;
+  margin: 0;
+  color: var(--muted);
+  font-size: 15px;
+}
+
+.muted {
+  margin: 0 0 4px;
   color: var(--muted);
   font-size: 14px;
-  font-weight: 600;
-  overflow-wrap: anywhere;
 }
 
 /* =========================================
@@ -137,7 +136,7 @@ select:focus-visible {
 }
 
 /* =========================================
-   Original Trivia Form
+   Shared Form Layout
    ========================================= */
 
 .topic-form {
@@ -171,43 +170,6 @@ select:focus-visible {
 }
 
 /* =========================================
-   Photo Trivia
-   ========================================= */
-
-.photo-round {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 10px;
-  width: 100%;
-  min-width: 0;
-  margin-bottom: 20px;
-  padding: 16px;
-  border: 1px dashed var(--line);
-  border-radius: 12px;
-}
-
-.photo-round input[type="file"] {
-  display: block;
-  width: 100%;
-  max-width: 100%;
-  min-width: 0;
-  font-size: 13px;
-}
-
-.photo-round button {
-  max-width: 100%;
-  white-space: normal;
-}
-
-.preview {
-  max-width: 100%;
-  max-height: 220px;
-  border: 1px solid var(--line);
-  border-radius: 10px;
-}
-
-/* =========================================
    Question & Answer Options
    ========================================= */
 
@@ -238,7 +200,7 @@ select:focus-visible {
 }
 
 /* =========================================
-   Feedback, Errors & Hints
+   Feedback & Errors
    ========================================= */
 
 .error {
@@ -250,8 +212,7 @@ select:focus-visible {
   overflow-wrap: anywhere;
 }
 
-.callout,
-.hintCallout {
+.callout {
   width: 100%;
   min-width: 0;
   max-width: 100%;
@@ -265,8 +226,7 @@ select:focus-visible {
   overflow-wrap: anywhere;
 }
 
-.callout strong,
-.hintCallout strong {
+.callout strong {
   color: var(--accent);
 }
 
@@ -448,13 +408,7 @@ progress {
     font-size: 24px;
   }
 
-  .score,
-  .bestScore {
-    font-size: 13px;
-    padding: 6px 10px;
-  }
-
-  /* Original trivia form */
+  /* Shared form layout */
   .topic-form {
     flex-direction: column;
     align-items: stretch;
@@ -475,16 +429,6 @@ progress {
 
   .question {
     font-size: 19px;
-  }
-
-  /* Photo trivia */
-  .photo-round {
-    align-items: stretch;
-    padding: 12px;
-  }
-
-  .photo-round button {
-    width: 100%;
   }
 
   /* VetBoard subject selector */

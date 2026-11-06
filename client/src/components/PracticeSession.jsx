@@ -74,6 +74,7 @@ export default function PracticeSession() {
       const answered = {
         questionId: currentQuestion.id,
         domain: currentQuestion.domain,
+        domainName: currentQuestion.domainName,
         question: currentQuestion.question,
         selectedAnswer: option,
         ...feedback,
@@ -138,6 +139,7 @@ function finishReview() {
         if (!acc[domain]) {
         acc[domain] = {
             domain,
+            domainName: item.domainName ?? domain,
             correct: 0,
             total: 0,
         };
@@ -229,6 +231,9 @@ function finishReview() {
               </strong>
               <p>Correct answer: {result.correctAnswer}</p>
               <p>{result.explanation}</p>
+              {result.source?.title && (
+                <small>Source: {result.source.title}</small>
+              )}
 
               <button type="button" onClick={nextQuestion}>
                 {isLastQuestion ? 'See Results' : 'Next Question'}
@@ -255,12 +260,7 @@ function finishReview() {
     <div key={domain.domain} className="domain-result">
       <div className="domain-result-header">
         <strong>
-          {domain.domain
-            .split('-')
-            .map((word) =>
-              word.charAt(0).toUpperCase() + word.slice(1)
-            )
-            .join(' ')}
+          {domain.domainName}
         </strong>
 
         <span>
@@ -271,7 +271,7 @@ function finishReview() {
       <progress
         value={domain.correct}
         max={domain.total}
-        aria-label={`${domain.domain} accuracy`}
+        aria-label={`${domain.domainName} accuracy`}
         className="domain-progress"
       />
     </div>
@@ -307,12 +307,7 @@ function finishReview() {
 
     <p>
       <strong>Subject:</strong>{' '}
-      {currentMissedQuestion.domain
-        .split('-')
-        .map((word) =>
-          word.charAt(0).toUpperCase() + word.slice(1)
-        )
-        .join(' ')}
+      {currentMissedQuestion.domainName ?? currentMissedQuestion.domain}
     </p>
 
     <h3>{currentMissedQuestion.question}</h3>
@@ -330,6 +325,9 @@ function finishReview() {
     <div className="callout">
       <strong>Explanation</strong>
       <p>{currentMissedQuestion.explanation}</p>
+      {currentMissedQuestion.source?.title && (
+        <small>Source: {currentMissedQuestion.source.title}</small>
+      )}
     </div>
 
     <div className="review-actions">

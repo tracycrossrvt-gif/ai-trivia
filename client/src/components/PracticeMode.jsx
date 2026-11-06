@@ -1,15 +1,21 @@
-
 import { useEffect, useState } from 'react';
 import { postJSON } from '../api.js';
 
 export default function PracticeMode() {
   const [domains, setDomains] = useState([]);
   const [selectedDomain, setSelectedDomain] = useState('');
-  const [question, setQuestion] = useState(null);
+  const [questions, setQuestions] = useState([]);
+  const [currentIndex, setCurrentIndex] = useState(0);
   const [result, setResult] = useState(null);
+  const [correctCount, setCorrectCount] = useState(0);
+  const [started, setStarted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [answering, setAnswering] = useState(false);
   const [error, setError] = useState('');
+
+  const question = questions[currentIndex];
+  const isLastQuestion = currentIndex === questions.length - 1;
+  const finished = started && questions.length > 0 && currentIndex >= questions.length;
 
   useEffect(() => {
     const controller = new AbortController();
@@ -21,7 +27,7 @@ export default function PracticeMode() {
         });
 
         if (!response.ok) {
-          throw new Error('Failed to load VTNE domains');
+          throw new Error('Failed to load VTNE subjects');
         }
 
         const data = await response.json();
@@ -37,18 +43,25 @@ export default function PracticeMode() {
     return () => controller.abort();
   }, []);
 
-  async function loadQuestion(event) {
-    event.preventDefault();
+  function reset() {
+    setQuestions([]);
+    setCurrentIndex(0);
+    setResult(null);
+    setCorrectCount(0);
+    setStarted(false);
+  }
+
+  async function loadQuestions(event) {
+    event?.preventDefault();
     if (!selectedDomain || loading) return;
 
     setLoading(true);
     setError('');
-    setQuestion(null);
-    setResult(null);
+    reset();
 
     try {
       const response = await fetch(
-        `/api/practice/questions?domain=${encodeURIComponent(selectedDomain)}`
+        `/api/practice/questions?domain=${encodeURIComponent(selectedDomain)}`,
       );
 
       if (!response.ok) {
@@ -56,7 +69,8 @@ export default function PracticeMode() {
       }
 
       const data = await response.json();
-      setQuestion(data.questions[0] ?? null);
+      setQuestions(data.questions);
+      setStarted(true);
     } catch (err) {
       setError(err.message);
     } finally {
@@ -77,6 +91,7 @@ export default function PracticeMode() {
       });
 
       setResult({ ...data, selectedAnswer: option });
+      if (data.correct) setCorrectCount((previous) => previous + 1);
     } catch (err) {
       setError(err.message);
     } finally {
@@ -84,19 +99,23 @@ export default function PracticeMode() {
     }
   }
 
+  function nextQuestion() {
+    setResult(null);
+    setCurrentIndex((previous) => previous + 1);
+  }
+
   return (
     <section className="card">
-      <h2>VetBoard Practice Mode</h2>
-      <p>Choose a VTNE domain to begin studying.</p>
+      <h2>Practice by Subject</h2>
+      <p>Choose a VTNE subject and work through its questions.</p>
 
-      <form onSubmit={loadQuestion} className="topic-form practice-domain-form">
+      <form onSubmit={loadQuestions} className="topic-form practice-domain-form">
         <select
-          aria-label="VTNE study domain"
+          aria-label="VTNE study subject"
           value={selectedDomain}
           onChange={(event) => {
             setSelectedDomain(event.target.value);
-            setQuestion(null);
-            setResult(null);
+            reset();
           }}
         >
           <option value="">Select a subject</option>
@@ -114,16 +133,18 @@ export default function PracticeMode() {
 
       {error && <p className="error" role="alert">{error}</p>}
 
-      {loading && <p role="status">Loading practice question...</p>}
+      {loading && <p role="status">Loading practice questions...</p>}
 
-      {!loading && selectedDomain && !question && !error && (
-        <p>
-          No reviewed questions are available for this subject yet.
-        </p>
+      {started && !loading && questions.length === 0 && (
+        <p>No reviewed questions are available for this subject yet.</p>
       )}
 
       {question && (
         <div className="practice-question">
+          <p className="muted">
+            Question {currentIndex + 1} of {questions.length}
+          </p>
+
           <h3>{question.question}</h3>
 
           <div className="options">
@@ -156,16 +177,34 @@ export default function PracticeMode() {
 
           {result && (
             <div className="callout" aria-live="polite">
-              <strong>
-                {result.correct ? 'Correct!' : 'Not quite!'}
-              </strong>
+              <strong>{result.correct ? 'Correct!' : 'Not quite!'}</strong>
               <p>Correct answer: {result.correctAnswer}</p>
               <p>{result.explanation}</p>
               {result.source?.title && (
                 <small>Source: {result.source.title}</small>
               )}
+
+              <div className="session-actions">
+                <button type="button" onClick={nextQuestion}>
+                  {isLastQuestion ? 'Finish Subject' : 'Next Question'}
+                </button>
+              </div>
             </div>
           )}
+        </div>
+      )}
+
+      {finished && (
+        <div className="callout">
+          <strong>Subject complete!</strong>
+          <p>
+            You answered {correctCount} of {questions.length} correctly.
+          </p>
+          <div className="session-actions">
+            <button type="button" onClick={loadQuestions}>
+              Practice This Subject Again
+            </button>
+          </div>
         </div>
       )}
     </section>

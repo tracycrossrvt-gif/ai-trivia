@@ -1,7 +1,7 @@
 {
   "name": "ai-trivia-server",
   "version": "1.0.0",
-  "description": "Express API for the AI Trivia game, powered by the Gemini API",
+  "description": "Express API for VetBoard VTNE practice",
   "type": "module",
   "main": "index.js",
   "scripts": {
