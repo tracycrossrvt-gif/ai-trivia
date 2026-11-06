@@ -1,3 +1,9 @@
+
+/* =========================================
+   VETBOARD / VET TECH TRIVIA
+   Global Theme & Base Styles
+   ========================================= */
+
 :root {
   --bg: #0f1020;
   --card: #1a1b2e;
@@ -9,100 +15,114 @@
   --red: #e84855;
 }
 
-* {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
+}
+
+html {
+  width: 100%;
 }
 
 body {
   margin: 0;
+  min-width: 0;
   background: var(--bg);
   color: var(--text);
-  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font-family: system-ui, -apple-system, "Segoe UI",
+    Roboto, sans-serif;
 }
 
+button,
+input,
+select {
+  font: inherit;
+}
+
+button {
+  padding: 12px 16px;
+  border: none;
+  border-radius: 10px;
+  background: var(--accent);
+  color: white;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.2s ease,
+    background-color 0.2s ease;
+}
+
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+button:focus-visible,
+input:focus-visible,
+select:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+/* =========================================
+   Main Application Layout
+   ========================================= */
+
 .app {
+  width: 100%;
   max-width: 640px;
   margin: 0 auto;
   padding: 32px 20px 64px;
 }
 
-header {
+.app > header {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  justify-content: space-between;
+  gap: 12px;
   margin-bottom: 24px;
 }
 
-header h1 {
+.app > header h1 {
+  flex: 1 1 170px;
+  min-width: 0;
   margin: 0;
   font-size: 28px;
+  line-height: 1.25;
 }
 
-.score, .bestScore {
+.score,
+.bestScore {
+  flex: 0 1 auto;
+  min-width: 0;
+  padding: 6px 14px;
   background: var(--card);
   border: 1px solid var(--line);
   border-radius: 999px;
-  padding: 6px 14px;
-  font-weight: 600;
   color: var(--muted);
-}
-
-.topic-form {
-  display: flex;
-  gap: 8px;
-  margin-bottom: 16px;
-}
-
-.topic-form input {
-  flex: 1;
-  padding: 12px 14px;
-  border-radius: 10px;
-  border: 1px solid var(--line);
-  background: var(--card);
-  color: var(--text);
-  font-size: 15px;
-}
-
-button {
-  padding: 12px 16px;
-  border-radius: 10px;
-  border: none;
-  background: var(--accent);
-  color: white;
+  font-size: 14px;
   font-weight: 600;
-  font-size: 15px;
-  cursor: pointer;
+  overflow-wrap: anywhere;
 }
 
-button:disabled {
-  opacity: 0.5;
-  cursor: default;
-}
-
-.photo-round {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  align-items: flex-start;
-  margin-bottom: 20px;
-  padding: 16px;
-  border: 1px dashed var(--line);
-  border-radius: 12px;
-}
-
-.preview {
-  max-width: 100%;
-  max-height: 220px;
-  border-radius: 10px;
-  border: 1px solid var(--line);
-}
+/* =========================================
+   Shared Cards & Content
+   ========================================= */
 
 .card {
-  background: var(--card);
+  width: 100%;
+  min-width: 0;
+  margin-top: 8px;
+  padding: 24px;
   border: 1px solid var(--line);
   border-radius: 16px;
-  padding: 24px;
-  margin-top: 8px;
+  background: var(--card);
+  overflow-wrap: anywhere;
+}
+
+.card > * {
+  min-width: 0;
 }
 
 .question {
@@ -111,15 +131,100 @@ button:disabled {
   line-height: 1.4;
 }
 
+.result {
+  margin: 16px 0 0;
+  font-weight: 600;
+}
+
+/* =========================================
+   Original Trivia Form
+   ========================================= */
+
+.topic-form {
+  display: flex;
+  align-items: stretch;
+  gap: 8px;
+  min-width: 0;
+  margin-bottom: 16px;
+}
+
+.topic-form input {
+  flex: 1 1 0;
+  min-width: 0;
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--card);
+  color: var(--text);
+  font-size: 15px;
+}
+
+.topic-form input::placeholder {
+  color: var(--muted);
+}
+
+.topic-form button {
+  flex: 0 0 auto;
+  min-width: 0;
+  white-space: normal;
+}
+
+/* =========================================
+   Photo Trivia
+   ========================================= */
+
+.photo-round {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  width: 100%;
+  min-width: 0;
+  margin-bottom: 20px;
+  padding: 16px;
+  border: 1px dashed var(--line);
+  border-radius: 12px;
+}
+
+.photo-round input[type="file"] {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  font-size: 13px;
+}
+
+.photo-round button {
+  max-width: 100%;
+  white-space: normal;
+}
+
+.preview {
+  max-width: 100%;
+  max-height: 220px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+}
+
+/* =========================================
+   Question & Answer Options
+   ========================================= */
+
 .options {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: 10px;
+  min-width: 0;
 }
 
 .option {
+  width: 100%;
+  min-width: 0;
   text-align: left;
   background: #23253c;
   border: 1px solid var(--line);
+  overflow-wrap: anywhere;
 }
 
 .option.correct {
@@ -132,29 +237,308 @@ button:disabled {
   border-color: var(--red);
 }
 
-.result {
-  margin: 16px 0 0;
-  font-weight: 600;
-}
+/* =========================================
+   Feedback, Errors & Hints
+   ========================================= */
 
 .error {
-  background: rgba(232, 72, 85, 0.12);
-  border: 1px solid var(--red);
-  color: #ffb3ba;
   padding: 12px 14px;
+  border: 1px solid var(--red);
   border-radius: 10px;
+  background: rgba(232, 72, 85, 0.12);
+  color: #ffb3ba;
+  overflow-wrap: anywhere;
 }
 
-.callout, .hintCallout {
+.callout,
+.hintCallout {
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
   margin-top: 16px;
   padding: 12px 16px;
-  background: rgba(108, 99, 255, 0.08);
   border-left: 4px solid var(--accent);
   border-radius: 4px 10px 10px 4px;
+  background: rgba(108, 99, 255, 0.08);
+  color: var(--text);
   line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+.callout strong,
+.hintCallout strong {
+  color: var(--accent);
+}
+
+/* =========================================
+   VetBoard Domain Selection
+   ========================================= */
+
+.practice-domain-form {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+  gap: 12px;
+  min-width: 0;
+}
+
+.practice-domain-form select {
+  flex: 1 1 180px;
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  min-height: 44px;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--card);
   color: var(--text);
 }
 
-.callout strong, .hintCallout strong {
-  color: var(--accent);
+.practice-domain-form button {
+  flex: 0 1 auto;
+  min-width: 130px;
+  white-space: normal;
+}
+
+/* =========================================
+   Practice Session Progress
+   ========================================= */
+
+progress {
+  max-width: 100%;
+  accent-color: var(--accent);
+}
+
+/* =========================================
+   VetBoard Domain Performance
+   ========================================= */
+
+.domain-results {
+  min-width: 0;
+  margin-top: 28px;
+  padding-top: 20px;
+  border-top: 1px solid var(--line);
+}
+
+.domain-results h4 {
+  margin-bottom: 18px;
+}
+
+.domain-result {
+  min-width: 0;
+  margin-bottom: 18px;
+}
+
+.domain-result-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  min-width: 0;
+  margin-bottom: 8px;
+  font-size: 14px;
+}
+
+.domain-result-header strong {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.domain-result-header span {
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+.domain-progress {
+  display: block;
+  width: 100%;
+  height: 9px;
+}
+
+/* =========================================
+   VetBoard Missed-Question Review
+   ========================================= */
+
+.missed-review {
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  margin-top: 24px;
+  padding: 20px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  overflow-wrap: anywhere;
+}
+
+.missed-review h3 {
+  margin: 16px 0;
+  overflow-wrap: anywhere;
+}
+
+.missed-review .callout {
+  margin-top: 16px;
+}
+
+/* =========================================
+   Review Navigation
+   ========================================= */
+
+.review-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+  gap: 12px;
+  width: 100%;
+  min-width: 0;
+  margin-top: 28px;
+}
+
+.review-actions button {
+  flex: 1 1 150px;
+  min-width: 0;
+  min-height: 44px;
+  padding: 12px 20px;
+  border-radius: 8px;
+  font-size: 14px;
+  line-height: 1.4;
+  white-space: normal;
+}
+
+/* =========================================
+   Session Results Actions
+   ========================================= */
+
+.session-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+  gap: 16px;
+  min-width: 0;
+  margin-top: 28px;
+}
+
+.session-actions button {
+  flex: 1 1 180px;
+  min-width: 0;
+  min-height: 46px;
+  padding: 12px 20px;
+  border-radius: 8px;
+  font-weight: 600;
+  white-space: normal;
+}
+
+/* =========================================
+   Responsive Layout — Mobile
+   ========================================= */
+
+@media (max-width: 480px) {
+  .app {
+    padding: 20px 12px 40px;
+  }
+
+  /* Header */
+  .app > header {
+    justify-content: flex-start;
+    gap: 10px;
+  }
+
+  .app > header h1 {
+    flex: 1 1 100%;
+    font-size: 24px;
+  }
+
+  .score,
+  .bestScore {
+    font-size: 13px;
+    padding: 6px 10px;
+  }
+
+  /* Original trivia form */
+  .topic-form {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+
+  .topic-form input,
+  .topic-form button {
+    flex: none;
+    width: 100%;
+    min-width: 0;
+  }
+
+  /* Main cards */
+  .card {
+    padding: 18px 16px;
+  }
+
+  .question {
+    font-size: 19px;
+  }
+
+  /* Photo trivia */
+  .photo-round {
+    align-items: stretch;
+    padding: 12px;
+  }
+
+  .photo-round button {
+    width: 100%;
+  }
+
+  /* VetBoard subject selector */
+  .practice-domain-form {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+
+  .practice-domain-form select,
+  .practice-domain-form button {
+    flex: none;
+    width: 100%;
+    min-width: 0;
+  }
+
+  /* Subject performance */
+  .domain-result-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+
+  .domain-result-header span {
+    white-space: normal;
+  }
+
+  /* Missed-question review */
+  .missed-review {
+    padding: 14px;
+  }
+
+  /* Navigation and action buttons */
+  .review-actions,
+  .session-actions {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+
+  .review-actions button,
+  .session-actions button {
+    flex: none;
+    width: 100%;
+    min-width: 0;
+  }
+}
+
+/* =========================================
+   Reduced Motion Accessibility
+   ========================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  button {
+    transition: none;
+  }
 }
