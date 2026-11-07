@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { postJSON } from '../api.js';
 import ExplainMore from './ExplainMore.jsx';
+import SourceNote from './SourceNote.jsx';
 
 export default function PracticeMode() {
   const [domains, setDomains] = useState([]);
@@ -181,9 +182,7 @@ export default function PracticeMode() {
               <strong>{result.correct ? 'Correct!' : 'Not quite!'}</strong>
               <p>Correct answer: {result.correctAnswer}</p>
               <p>{result.explanation}</p>
-              {result.source?.title && (
-                <small>Source: {result.source.title}</small>
-              )}
+              <SourceNote source={result.source} />
 
               <ExplainMore
                 key={question.id}

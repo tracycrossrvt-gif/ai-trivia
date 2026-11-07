@@ -2,6 +2,7 @@
 import { useState } from 'react';
 import { postJSON } from '../api.js';
 import ExplainMore from './ExplainMore.jsx';
+import SourceNote from './SourceNote.jsx';
 
 export default function PracticeSession() {
   const [questions, setQuestions] = useState([]);
@@ -232,9 +233,7 @@ function finishReview() {
               </strong>
               <p>Correct answer: {result.correctAnswer}</p>
               <p>{result.explanation}</p>
-              {result.source?.title && (
-                <small>Source: {result.source.title}</small>
-              )}
+              <SourceNote source={result.source} />
 
               <ExplainMore
                 key={result.questionId}
@@ -332,9 +331,7 @@ function finishReview() {
     <div className="callout">
       <strong>Explanation</strong>
       <p>{currentMissedQuestion.explanation}</p>
-      {currentMissedQuestion.source?.title && (
-        <small>Source: {currentMissedQuestion.source.title}</small>
-      )}
+      <SourceNote source={currentMissedQuestion.source} />
 
       <ExplainMore
         key={`review-${currentMissedQuestion.questionId}`}

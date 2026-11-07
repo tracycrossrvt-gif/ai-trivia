@@ -540,3 +540,13 @@ progress {
     width: 100%;
   }
 }
+
+.source-note {
+  display: block;
+  margin-top: 8px;
+  color: var(--muted);
+}
+
+.source-note a {
+  color: var(--accent);
+}
