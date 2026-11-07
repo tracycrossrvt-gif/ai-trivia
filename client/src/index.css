@@ -550,3 +550,60 @@ progress {
 .source-note a {
   color: var(--accent);
 }
+
+/* =========================================
+   Report a Question
+   ========================================= */
+
+.link-button {
+  display: block;
+  margin-top: 12px;
+  padding: 0;
+  border: none;
+  background: none;
+  color: var(--muted);
+  font-size: 13px;
+  text-decoration: underline;
+}
+
+.report-form {
+  display: grid;
+  gap: 10px;
+  margin-top: 12px;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+}
+
+.report-form label {
+  display: grid;
+  gap: 6px;
+  font-size: 14px;
+}
+
+.report-form select,
+.report-form textarea {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--card);
+  color: var(--text);
+  font: inherit;
+}
+
+.report-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.report-actions .link-button {
+  margin-top: 0;
+}
+
+.report-thanks {
+  margin-top: 12px;
+  color: var(--muted);
+  font-size: 14px;
+}

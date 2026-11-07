@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { postJSON } from '../api.js';
 import ExplainMore from './ExplainMore.jsx';
 import SourceNote from './SourceNote.jsx';
+import ReportQuestion from './ReportQuestion.jsx';
 
 export default function PracticeMode() {
   const [domains, setDomains] = useState([]);
@@ -189,6 +190,8 @@ export default function PracticeMode() {
                 questionId={question.id}
                 selectedAnswer={result.selectedAnswer}
               />
+
+              <ReportQuestion key={`report-${question.id}`} questionId={question.id} />
 
               <div className="session-actions">
                 <button type="button" onClick={nextQuestion}>

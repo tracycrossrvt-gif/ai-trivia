@@ -4,6 +4,10 @@ import practiceRoutes from './routes/practice.js';
 
 const app = express();
 
+// Vercel sits in front of the app, so read the visitor's IP from its headers.
+// The per-visitor limits on reports and explanations depend on this.
+app.set('trust proxy', true);
+
 app.use(express.json());
 
 app.get('/api/health', (req, res) => {

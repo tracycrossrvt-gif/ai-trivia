@@ -2,6 +2,7 @@ import { questions } from '../data/questions.js';
 import express from 'express';
 import { domains, domainNames } from '../data/domains.js';
 import { MODEL, ai } from '../gemini.js';
+import { addReport, getHiddenIds, reportsEnabled } from '../data/reports.js';
 
 const router = express.Router();
 
@@ -45,7 +46,7 @@ router.get('/domains', (req, res) => {
 });
 
 // GET /api/practice/questions?domain=pharmacy
-router.get('/questions', (req, res) => {
+router.get('/questions', async (req, res) => {
   const { domain } = req.query;
 
   if (typeof domain !== 'string' || !domainNames[domain]) {
@@ -54,8 +55,9 @@ router.get('/questions', (req, res) => {
     });
   }
 
+  const hidden = await getHiddenIds();
   const eligible = questions.filter(
-    (item) => item.domain === domain && isAvailable(item),
+    (item) => item.domain === domain && isAvailable(item) && !hidden.has(item.id),
   );
 
   res.json({
@@ -96,8 +98,11 @@ router.post('/answer', (req, res) => {
 });
 
 // GET /api/practice/session
-router.get('/session', (req, res) => {
-  const eligible = questions.filter(isAvailable);
+router.get('/session', async (req, res) => {
+  const hidden = await getHiddenIds();
+  const eligible = questions.filter(
+    (item) => isAvailable(item) && !hidden.has(item.id),
+  );
 
   if (eligible.length < SESSION_SIZE) {
     return res.status(409).json({
@@ -118,10 +123,10 @@ router.get('/session', (req, res) => {
 
 const EXPLAIN_PROMPT = `You are a patient, encouraging tutor helping a recent veterinary technology graduate prepare for the VTNE.
 
-You will receive a practice question, its options, the correct answer, an explanation reviewed by a credentialed professional, and possibly the student's answer and a follow-up question.
+You will receive a practice question, its options, the correct answer, a source-checked explanation, and possibly the student's answer and a follow-up question.
 
 Rules:
-- Treat the correct answer and reviewed explanation as authoritative. Never contradict them.
+- Treat the correct answer and explanation as authoritative. Never contradict them.
 - Expand on the concept: why the correct answer is right, why the student's choice (if wrong) is a common mix-up, and a memory tip if one helps.
 - Stay at the level an entry-level credentialed veterinary technician needs.
 - Use only well-established, widely accepted veterinary knowledge. If you are not sure about something, say so and suggest checking their textbook.
@@ -129,20 +134,20 @@ Rules:
 - Do not give treatment or dosing advice for a specific real patient. Direct that to their supervising veterinarian.
 - Keep the reply under 180 words. Use plain text with short paragraphs. No markdown headings.`;
 
-// A simple per-visitor limit to keep AI costs predictable.
-const EXPLAIN_LIMIT = 30;
-const EXPLAIN_WINDOW_MS = 10 * 60 * 1000;
-const explainUsage = new Map();
-
-function overExplainLimit(key) {
-  const now = Date.now();
-  const recent = (explainUsage.get(key) ?? []).filter(
-    (time) => now - time < EXPLAIN_WINDOW_MS,
-  );
-  recent.push(now);
-  explainUsage.set(key, recent);
-  return recent.length > EXPLAIN_LIMIT;
+// Simple per-visitor limits. Each returns true once a visitor goes over.
+function makeLimiter(limit, windowMs) {
+  const usage = new Map();
+  return (key) => {
+    const now = Date.now();
+    const recent = (usage.get(key) ?? []).filter((time) => now - time < windowMs);
+    recent.push(now);
+    usage.set(key, recent);
+    return recent.length > limit;
+  };
 }
+
+// Keeps AI costs predictable.
+const overExplainLimit = makeLimiter(30, 10 * 60 * 1000);
 
 // POST /api/practice/explain
 router.post('/explain', async (req, res) => {
@@ -180,7 +185,7 @@ router.post('/explain', async (req, res) => {
     `Question: ${question.question}`,
     `Options: ${question.options.join(' | ')}`,
     `Correct answer: ${question.correctAnswer}`,
-    `Reviewed explanation: ${question.explanation}`,
+    `Explanation: ${question.explanation}`,
     studentAnswer ? `Student's answer: ${studentAnswer}` : '',
     followUp?.trim()
       ? `Student's follow-up question: ${followUp.trim()}`
@@ -204,6 +209,51 @@ router.post('/explain', async (req, res) => {
   } catch (error) {
     console.error('Error generating explanation:', error);
     res.status(503).json({ error: 'Could not get an explanation right now' });
+  }
+});
+
+// ---------------------------------------------------------------
+// "Report this question": hides the question for everyone right away.
+// Review reports with `npm run reports` in the server folder.
+// ---------------------------------------------------------------
+
+const REPORT_REASONS = ['wrong-answer', 'unclear', 'typo', 'other'];
+
+// Limits how many questions one visitor can hide in a day.
+const overReportLimit = makeLimiter(5, 24 * 60 * 60 * 1000);
+
+// POST /api/practice/report
+router.post('/report', async (req, res) => {
+  const { questionId, reason, comment } = req.body ?? {};
+
+  if (typeof questionId !== 'string' || !REPORT_REASONS.includes(reason)) {
+    return res.status(400).json({ error: 'A question and a reason are required' });
+  }
+
+  if (comment !== undefined && (typeof comment !== 'string' || comment.length > 500)) {
+    return res.status(400).json({ error: 'Comments must be 500 characters or fewer' });
+  }
+
+  if (!questions.some((item) => item.id === questionId)) {
+    return res.status(404).json({ error: 'Question not found' });
+  }
+
+  if (!reportsEnabled()) {
+    return res.status(503).json({ error: 'Reporting is not set up yet' });
+  }
+
+  if (overReportLimit(req.ip ?? 'unknown')) {
+    return res.status(429).json({
+      error: 'Thanks for all your reports today. Please try again tomorrow.',
+    });
+  }
+
+  try {
+    await addReport({ questionId, reason, comment: comment?.trim() });
+    res.json({ ok: true });
+  } catch (error) {
+    console.error('Error saving report:', error);
+    res.status(503).json({ error: 'Could not save your report right now' });
   }
 });
 

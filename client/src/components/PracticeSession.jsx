@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { postJSON } from '../api.js';
 import ExplainMore from './ExplainMore.jsx';
 import SourceNote from './SourceNote.jsx';
+import ReportQuestion from './ReportQuestion.jsx';
 
 export default function PracticeSession() {
   const [questions, setQuestions] = useState([]);
@@ -241,6 +242,11 @@ function finishReview() {
                 selectedAnswer={result.selectedAnswer}
               />
 
+              <ReportQuestion
+                key={`report-${result.questionId}`}
+                questionId={result.questionId}
+              />
+
               <button type="button" onClick={nextQuestion}>
                 {isLastQuestion ? 'See Results' : 'Next Question'}
               </button>
@@ -337,6 +343,11 @@ function finishReview() {
         key={`review-${currentMissedQuestion.questionId}`}
         questionId={currentMissedQuestion.questionId}
         selectedAnswer={currentMissedQuestion.selectedAnswer}
+      />
+
+      <ReportQuestion
+        key={`report-review-${currentMissedQuestion.questionId}`}
+        questionId={currentMissedQuestion.questionId}
       />
     </div>
 
