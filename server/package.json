@@ -6,7 +6,9 @@
   "main": "index.js",
   "scripts": {
     "dev": "node --watch index.js",
-    "start": "node index.js"
+    "start": "node index.js",
+    "generate": "node scripts/generate-questions.js",
+    "validate": "node scripts/validate-questions.js"
   },
   "dependencies": {
     "@google/genai": "^2.9.0",

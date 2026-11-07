@@ -1,6 +1,7 @@
 
 import { useState } from 'react';
 import { postJSON } from '../api.js';
+import ExplainMore from './ExplainMore.jsx';
 
 export default function PracticeSession() {
   const [questions, setQuestions] = useState([]);
@@ -235,6 +236,12 @@ function finishReview() {
                 <small>Source: {result.source.title}</small>
               )}
 
+              <ExplainMore
+                key={result.questionId}
+                questionId={result.questionId}
+                selectedAnswer={result.selectedAnswer}
+              />
+
               <button type="button" onClick={nextQuestion}>
                 {isLastQuestion ? 'See Results' : 'Next Question'}
               </button>
@@ -328,6 +335,12 @@ function finishReview() {
       {currentMissedQuestion.source?.title && (
         <small>Source: {currentMissedQuestion.source.title}</small>
       )}
+
+      <ExplainMore
+        key={`review-${currentMissedQuestion.questionId}`}
+        questionId={currentMissedQuestion.questionId}
+        selectedAnswer={currentMissedQuestion.selectedAnswer}
+      />
     </div>
 
     <div className="review-actions">

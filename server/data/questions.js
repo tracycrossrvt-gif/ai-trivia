@@ -1,5 +1,10 @@
 
-export const questions = [
+import { generatedQuestions } from './generated-questions.js';
+
+// Hand-written questions. AI-drafted questions live in
+// generated-questions.js (created by `npm run generate`).
+// Only questions with reviewStatus 'approved' are shown to students.
+const handWrittenQuestions = [
   {
     id: 'vb-001',
     domain: 'pharmacy',
@@ -99,3 +104,5 @@ export const questions = [
 },
 
 ];
+
+export const questions = [...handWrittenQuestions, ...generatedQuestions];

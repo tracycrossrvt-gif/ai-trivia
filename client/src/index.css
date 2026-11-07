@@ -486,3 +486,57 @@ progress {
     transition: none;
   }
 }
+
+/* =========================================
+   AI Tutor ("Explain further")
+   ========================================= */
+
+.explain-more {
+  margin-top: 12px;
+}
+
+.secondary-button {
+  background: transparent;
+  border: 1px solid var(--accent);
+  color: var(--accent);
+}
+
+.explain-reply {
+  margin-top: 12px;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  white-space: pre-line;
+}
+
+.explain-reply p {
+  margin: 0;
+}
+
+.explain-question {
+  margin-bottom: 6px !important;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.ai-note {
+  margin: 8px 0;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.explain-form {
+  margin-bottom: 12px;
+}
+
+@media (max-width: 480px) {
+  .explain-form {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .explain-form input,
+  .explain-form button {
+    width: 100%;
+  }
+}

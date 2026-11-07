@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { postJSON } from '../api.js';
+import ExplainMore from './ExplainMore.jsx';
 
 export default function PracticeMode() {
   const [domains, setDomains] = useState([]);
@@ -183,6 +184,12 @@ export default function PracticeMode() {
               {result.source?.title && (
                 <small>Source: {result.source.title}</small>
               )}
+
+              <ExplainMore
+                key={question.id}
+                questionId={question.id}
+                selectedAnswer={result.selectedAnswer}
+              />
 
               <div className="session-actions">
                 <button type="button" onClick={nextQuestion}>
