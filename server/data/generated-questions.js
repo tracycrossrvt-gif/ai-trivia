@@ -237,7 +237,7 @@ export const generatedQuestions = [
       "Whether the cat needs a second dose of atropine"
     ],
     "correctAnswer": "Endotracheal tube placement and the quality of chest compressions",
-    "explanation": "An end-tidal CO2 below 10 mm Hg during CPR suggests esophageal intubation, a misplaced tube, or ineffective compressions. A sudden rise in end-tidal CO2, not a low value, is what suggests return of spontaneous circulation.",
+    "explanation": "A very low end-tidal CO2 during CPR suggests the tube may be in the esophagus or misplaced, or that compressions are ineffective; the goal during CPR is at least 18 mm Hg. A sudden, sustained rise in end-tidal CO2, not a low value, is what suggests return of spontaneous circulation.",
     "source": {
       "title": "Merck Veterinary Manual: Cardiopulmonary Resuscitation of Small Animals",
       "reference": "https://www.merckvetmanual.com/emergency-medicine-and-critical-care/specific-diagnostics-and-therapy/cardiopulmonary-resuscitation-of-small-animals",
